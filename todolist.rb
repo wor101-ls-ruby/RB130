@@ -50,11 +50,8 @@ class TodoList
   end
   
   def add(todo)
-    if todo.instance_of? Todo
-      @todos << todo
-    else
-      raise TypeError, "Can only add Todo objects"
-    end
+    raise TypeError, "Can only add Todo Objects" unless todo.instance_of? Todo
+    @todos << todo
   end
   
   def <<(todo)
@@ -82,21 +79,15 @@ class TodoList
   end
   
   def item_at(index)
-    if index >= size
-      raise IndexError
-    else
-      @todos[index]
-    end
+    @todos.fetch(index) # fetch will raise the IndexError
   end
   
   def mark_done_at(index)
-    raise IndexError unless index < size
-    @todos[index].done!
+    item_at(index).done!
   end
   
   def mark_undone_at(index)
-    raise IndexError unless index < size
-    @todos[index].undone!
+    item_at(index).undone!
   end
   
   def to_s
@@ -110,6 +101,18 @@ class TodoList
       item.done!
       item
     end
+  end
+  
+  def shift
+    @todos.shift
+  end
+  
+  def pop
+    @todos.pop
+  end
+  
+  def remove_at(index)
+    @todos.delete(item_at(index))
   end
   
 end
@@ -169,6 +172,19 @@ list.mark_undone_at(1)          # marks the 2nd item as not done,
 
 # done!
 list.done!                      # marks all items as done
+
+# ---- Deleting from the list -----
+
+# shift
+# list.shift                      # removes and returns the first item in list
+
+# pop
+# list.pop                        # removes and returns the last item in list
+
+# remove_at
+# list.remove_at                  # raises ArgumentError
+# list.remove_at(1)               # removes and returns the 2nd item
+# list.remove_at(100)             # raises IndexError
 
 # ---- Outputting the list -----
 
