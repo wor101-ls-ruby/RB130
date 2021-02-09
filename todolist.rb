@@ -130,6 +130,39 @@ class TodoList
     return_list
   end
   
+  def find_by_title(search_title)
+    select { |item| item.title == search_title }.first
+    # each { |item| return item if item.title == search_title }
+    # nil
+  end
+  
+  def all_done
+    select { |item| item.done? }
+  end
+  
+  def all_not_done
+    select { |item| !item.done? }
+  end
+  
+  def mark_done(search_title)
+    find_by_title(search_title) && find_by_title(search_title).done!
+
+    # each do |item|
+    #   if find_by_title(search_title) == item
+    #     item.done!
+    #     break
+    #   end
+    # end
+  end
+  
+  def mark_all_done
+    each { |item| item.done! }
+  end
+  
+  def mark_all_undone
+    each { |item| item.undone! }
+  end
+  
 end
     
 
@@ -225,5 +258,14 @@ puts list.to_s                      # returns string representation of the list
 
 todo1.done!
 
-results = list.select { |todo| todo.done? }
-puts results.inspect
+# results = list.select { |todo| todo.done? }
+# puts results.inspect
+
+
+list.find_by_title("Buy milk")
+list.all_done
+list.all_not_done
+list.mark_done("Clean room")
+list.mark_all_done
+list.mark_all_undone
+p list.all_done
