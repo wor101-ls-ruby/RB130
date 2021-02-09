@@ -49,14 +49,11 @@ class TodoList
     @todos = []
   end
   
-  def add(todo)
+  def <<(todo)
     raise TypeError, "Can only add Todo Objects" unless todo.instance_of? Todo
     @todos << todo
   end
-  
-  def <<(todo)
-    add(todo)
-  end
+  alias_method :add, :<<
   
   def size
     @todos.size
@@ -115,6 +112,24 @@ class TodoList
     @todos.delete(item_at(index))
   end
   
+  def each
+    counter = 0
+    while counter < size
+      yield(item_at(counter))
+      counter += 1
+    end
+    self
+  end
+  
+  def select
+    return_list = TodoList.new(title)
+    #return_array = []
+    each do |item|
+      return_list << item if yield(item)
+    end
+    return_list
+  end
+  
 end
     
 
@@ -162,16 +177,16 @@ p list.item_at(1)                 # returns 2nd item in list (zero based index)
 
 # mark_done_at
 #list.mark_done_at               # raises ArgumentError
-list.mark_done_at(1)            # marks the 2nd item as done
+#list.mark_done_at(1)            # marks the 2nd item as done
 #list.mark_done_at(100)          # raises IndexError
 
 # mark_undone_at
 # list.mark_undone_at             # raises ArgumentError
-list.mark_undone_at(1)          # marks the 2nd item as not done,
+#list.mark_undone_at(1)          # marks the 2nd item as not done,
 # list.mark_undone_at(100)        # raises IndexError
 
 # done!
-list.done!                      # marks all items as done
+#list.done!                      # marks all items as done
 
 # ---- Deleting from the list -----
 
@@ -202,3 +217,13 @@ puts list.to_s                      # returns string representation of the list
 # [ ] Buy milk
 # [X] Clean room
 # [ ] Go to gym
+# puts ""
+# puts "#each method:"
+# list.each do |todo|
+#   puts todo
+# end
+
+todo1.done!
+
+results = list.select { |todo| todo.done? }
+puts results.inspect
