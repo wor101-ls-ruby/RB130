@@ -88,9 +88,9 @@ class TodoList
   end
   
   def to_s
-    return_string = "---- Today's Todos ----\n"
-    @todos.each { |item| return_string += item.to_s + "\n" }
-    return_string
+    text = "---- #{title} ----\n"
+    text << @todos.map(&:to_s).join("\n")
+    text
   end
   
   def done!
@@ -267,5 +267,6 @@ list.all_done
 list.all_not_done
 list.mark_done("Clean room")
 list.mark_all_done
-list.mark_all_undone
-p list.all_done
+puts list
+#list.mark_all_undone
+#list.all_done
